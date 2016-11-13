@@ -110,9 +110,7 @@ class GithubSignIn(OAuthSignIn):
         print(me)
         return (
             'github$' + str(me['id']),
-            me.get('email').split('@')[0],  # Facebook does not provide
-                                            # username, so the email's user
-                                            # is used instead
+            me.get('login'),
             me.get('email')
         )
 

@@ -187,5 +187,6 @@ class GoogleSignIn(OAuthSignIn):
             decoder=json.loads
         )
         me = oauth_session.get('').json()
-        social_id = 'google$' + str(me['name'])
+        print(me)
+        social_id = 'google$' + str(me['sub'])
         return (social_id, me['name'], me['email'])  # use prepended username to create social_id

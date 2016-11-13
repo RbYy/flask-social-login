@@ -29,7 +29,6 @@ app.config['OAUTH_CREDENTIALS'] = {
 }
 
 db = SQLAlchemy(app)
-db.create_all()
 lm = LoginManager(app)
 lm.login_view = 'index'
 
@@ -60,14 +59,6 @@ def index():
 def logout():
     logout_user()
     return redirect(url_for('index'))
-
-
-@app.route('/authorize/<provider>')
-def oauth_authorize(provider):
-    if not current_user.is_anonymous:
-        return redirect(url_for('index'))
-    oauth = OAuthSignIn.get_provider(provider)
-    return oauth.authorize()
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -109,6 +100,14 @@ def login():
     login_user(registered_user, remember=remember_me)
     flash('Logged in successfully')
     return redirect(request.args.get('next') or url_for('index'))
+
+
+@app.route('/authorize/<provider>')
+def oauth_authorize(provider):
+    if not current_user.is_anonymous:
+        return redirect(url_for('index'))
+    oauth = OAuthSignIn.get_provider(provider)
+    return oauth.authorize()
 
 
 @app.route('/callback/<provider>')

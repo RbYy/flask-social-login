@@ -7,26 +7,7 @@ from oauth import OAuthSignIn
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'top secret!'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
-app.config['OAUTH_CREDENTIALS'] = {
-    'facebook': {
-        'id': '572089576315607',
-        'secret': '8ebad8172119c99e78780cbee4b36416'
-    },
-    'twitter': {
-        'id': 'FvMJymvGvzzByEhxDXYMGvsff',
-        'secret': 'c1iw9wpMrYuMpjjTJROYUxbAYlRpO4E36WlxHyVf6hqnyo9ZSH'
-    },
-    'github': {
-        'id': 'cde938d195e8d4bcd203',
-        'secret': '3516444e41ed967780033b91d9672bfb3fc1f466'
-    },
-    'google': {
-        'id': '646103695922-b1djk9c1ksh7732au8dmleq7juiee7s7.apps.googleusercontent.com',
-        'secret': 'Pf1wCMcPrs8Yq8Mi95rbbeRp'
-    },
-}
+app.config.from_pyfile('config.ini', silent=True)
 
 db = SQLAlchemy(app)
 lm = LoginManager(app)

@@ -21,6 +21,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(250), nullable=False)
     email = db.Column(db.String(64), nullable=True)
+    social_user = db.Column(db.Boolean, default=True)
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
@@ -42,17 +43,22 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
 def register():
-    if request.method == 'GET':
-        return render_template('register.html')
+    existing = User.query.filter_by(username=request.form['username'], social_user=False).first()
+    print('exist:', existing)
+    if existing:
+        print('exist:', existing)
+        flash('Username already taken')
+        return redirect(url_for('index'))
     not_social = 'not_social' + request.form['username']
     password = generate_password_hash(request.form['password'])
     user = User(
         social_id=not_social,
         username=request.form['username'],
         password=password,
-        email=request.form['email']
+        email=request.form['email'],
+        social_user=False
     )
     db.session.add(user)
     db.session.commit()
@@ -61,17 +67,14 @@ def register():
     return redirect(url_for('index'))
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'GET':
-        return render_template('login.html')
-
     username = request.form['username']
     password = request.form['password']
     remember_me = False
     if 'remember_me' in request.form:
         remember_me = True
-    registered_user = User.query.filter_by(username=username).first()
+    registered_user = User.query.filter_by(username=username, social_user=False).first()
     if registered_user is None:
         flash('Username is invalid')
         return redirect(url_for('index'))

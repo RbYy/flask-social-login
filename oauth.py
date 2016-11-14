@@ -123,7 +123,7 @@ class TwitterSignIn(OAuthSignIn):
             consumer_key=self.consumer_id,
             consumer_secret=self.consumer_secret,
             request_token_url='https://api.twitter.com/oauth/request_token',
-            authorize_url='https://api.twitter.com/oauth/authorize',
+            authorize_url='https://api.twitter.com/oauth/authenticate',
             access_token_url='https://api.twitter.com/oauth/access_token',
             base_url='https://api.twitter.com/1.1/'
         )

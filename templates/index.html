@@ -11,7 +11,12 @@
     {% if current_user.is_authenticated %}
         <h2>Hi, {{ current_user.username }}!</h2>
         <p><a href="{{ url_for('logout') }}">Logout</a></p>
-
+        <p>Response:</p>
+        <dl>
+        {% for key, value in me.iteritems() %}
+          <dt style="font-weight: bold; padding-top: 20px;">{{ key }}</dt><dd>{{value}}</dd>
+        {% endfor %}
+        </dl>
     {% else %}
 <!-- ----------------- sign up form ------------------------ -->        
           <form action="/register" method=post class="form-horizontal">

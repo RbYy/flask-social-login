@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, flash, request
+from flask import Flask, redirect, url_for, render_template, flash, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user,\
     current_user
@@ -34,7 +34,8 @@ def load_user(id):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    me = session['me'] or ''
+    return render_template('index.html', me=me)
 
 
 @app.route('/logout')
@@ -99,7 +100,7 @@ def oauth_callback(provider):
     if not current_user.is_anonymous:  # if logged in
         return redirect(url_for('index'))
     oauth = OAuthSignIn.get_provider(provider)
-    social_id, username, email = oauth.callback()
+    social_id, username, email, me = oauth.callback()
     if social_id is None:
         flash('Authentication failed.')
         return redirect(url_for('index'))
@@ -109,6 +110,7 @@ def oauth_callback(provider):
         db.session.add(user)
         db.session.commit()
     login_user(user, True)
+    session['me'] = me
     return redirect(url_for('index'))
 
 

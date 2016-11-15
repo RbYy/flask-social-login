@@ -69,7 +69,8 @@ class FacebookSignIn(OAuthSignIn):
             me.get('email').split('@')[0],  # Facebook does not provide
                                             # username, so the email's user
                                             # is used instead
-            me.get('email')
+            me.get('email'),
+            me
         )
 
 
@@ -111,7 +112,8 @@ class GithubSignIn(OAuthSignIn):
         return (
             'github$' + str(me['id']),
             me.get('login'),
-            me.get('email')
+            me.get('email'),
+            me
         )
 
 
@@ -149,7 +151,7 @@ class TwitterSignIn(OAuthSignIn):
         print(me)
         social_id = 'twitter$' + str(me.get('id'))
         username = me.get('screen_name')
-        return social_id, username, None   # Twitter does not provide email
+        return social_id, username, None, me  # Twitter does not provide email
 
 
 class GoogleSignIn(OAuthSignIn):
@@ -189,4 +191,4 @@ class GoogleSignIn(OAuthSignIn):
         me = oauth_session.get('').json()
         print(me)
         social_id = 'google$' + str(me['sub'])
-        return (social_id, me['name'], me['email'])  # use prepended username to create social_id
+        return (social_id, me['name'], me['email'], me)  # use prepended username to create social_id

@@ -4,6 +4,8 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user,\
     current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from oauth import OAuthSignIn
+import boto3
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -24,8 +26,27 @@ class GUIDUserMixin(UserMixin):
 
 
 class RobertBrumatTest(GUIDUserMixin, Model):
+    __dynamoDB = boto3.resource('dynamodb')
+    __T = __dynamoDB.Table('RobertBrumatTest')
     GUID = Field(hash_key=True)
     password = Field()
+
+    def saveLogin(self, social_data, provider):
+        ts = datetime.now()
+
+        storeArray = social_data
+        if provider == 'google':
+            storeArray['GUID'] = 'smn::%s::%s' % (provider, social_data['sub'])
+        else:
+            storeArray['GUID'] = 'smn::%s::%s' % (provider, social_data['id'])
+
+        for key, value in storeArray.items():
+            if value == '':
+                storeArray[key] = None
+
+        RobertBrumatTest.__T.put_item(Item=storeArray)
+        self.post_save_()
+        self.executionTime = datetime.now() - ts
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
@@ -69,7 +90,7 @@ def register():
     u.password = password
     engine.save(u)
     login_user(u, True)
-    session['me'] = {'username:': u.GUID}
+    session['me'] = {'GUID:': u.GUID}
     flash('User successfully registered')
     return redirect(url_for('index'))
 
@@ -107,20 +128,23 @@ def oauth_callback(provider):
     if not current_user.is_anonymous:  # if logged in
         return redirect(url_for('index'))
     oauth = OAuthSignIn.get_provider(provider)
-    social_id, username, email, me = oauth.callback()
+    social_id, username, email, social_data = oauth.callback()
     if social_id is None:
         flash('Authentication failed.')
         return redirect(url_for('index'))
 
     social_id = 'smn::' + provider + '::' + str(social_id)
+    print('ffffff', social_id, provider)
+    # user_data, GUID = db.getUser(social_id, provider)
+    # print('blabla', GUID)
     user = engine.query(RobertBrumatTest).filter(GUID=social_id).first(desc=True)
 
     if not user:  # create new user with provider's data and a placeholder for password
         print('creating user ...')
         user = RobertBrumatTest(social_id)
-        engine.save(user)
+        user.saveLogin(social_data, provider)
     login_user(user, True)
-    session['me'] = me
+    session['me'] = social_data
     return redirect(url_for('index'))
 
 

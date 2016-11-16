@@ -25,9 +25,10 @@ class GUIDUserMixin(UserMixin):
 
 class RobertBrumatTest(GUIDUserMixin, Model):
     GUID = Field(hash_key=True)
+    password = Field()
 
-    def __init__(self, GUID):
-        self.GUID = GUID
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 
 engine.register(RobertBrumatTest)
@@ -40,7 +41,7 @@ def load_user(id):
 
 @app.route('/')
 def index():
-    me = session['me'] or ''
+    me = session['me'] or {}
     return render_template('index.html', me=me)
 
 
@@ -48,6 +49,49 @@ def index():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+def generate_GUID():
+    return 'smn::user::' + request.form['username']
+
+
+@app.route('/register', methods=['POST'])
+def register():
+    exists = engine.query(RobertBrumatTest).filter(GUID=generate_GUID()).first(desc=True)
+
+    if exists:
+        flash('Username already taken')
+        return redirect(url_for('index'))
+
+    password = generate_password_hash(request.form['password'])
+    u = RobertBrumatTest(GUID=generate_GUID())
+    u.email = request.form['email']
+    u.password = password
+    engine.save(u)
+    login_user(u, True)
+    session['me'] = {'username:': u.GUID}
+    flash('User successfully registered')
+    return redirect(url_for('index'))
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    password = request.form['password']
+    remember_me = False
+    if 'remember_me' in request.form:
+        remember_me = True
+    exists = engine.query(RobertBrumatTest).filter(GUID=generate_GUID()).first(desc=True)
+    if not exists:
+        flash('Username is invalid')
+        return redirect(url_for('index'))
+
+    if not check_password_hash(exists.password, password):
+        flash('Password is invalid')
+        return redirect(url_for('index'))
+    session['me'] = {'username:': exists.GUID}
+    login_user(exists, remember=remember_me)
+    flash('Logged in successfully')
+    return redirect(request.args.get('next') or url_for('index'))
 
 
 @app.route('/authorize/<provider>')
@@ -68,7 +112,7 @@ def oauth_callback(provider):
         flash('Authentication failed.')
         return redirect(url_for('index'))
 
-    social_id = 'smn::' + provider + '::' + social_id.strip('$')
+    social_id = 'smn::' + provider + '::' + str(social_id)
     user = engine.query(RobertBrumatTest).filter(GUID=social_id).first(desc=True)
 
     if not user:  # create new user with provider's data and a placeholder for password

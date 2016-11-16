@@ -9,7 +9,7 @@
         <p>{{ message }}</p>
     {% endfor %}
     {% if current_user.is_authenticated %}
-        <h2>Hi, {{ current_user.username }}!</h2>
+        <h2>Hi, {{ current_user.GUID }}!</h2>
         <p><a href="{{ url_for('logout') }}">Logout</a></p>
         <p>Response:</p>
         <dl>
@@ -18,6 +18,7 @@
         {% endfor %}
         </dl>
     {% else %}
+
 <!-- ----------------- sign up form ------------------------ -->        
           <form action="/register" method=post class="form-horizontal">
             <h2>Sign up: </h2>

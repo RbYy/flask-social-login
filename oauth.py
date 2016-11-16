@@ -65,7 +65,7 @@ class FacebookSignIn(OAuthSignIn):
         me = oauth_session.get('me?fields=id,email').json()
         print(me)
         return (
-            'facebook$' + me['id'],
+            me['id'],
             me.get('email').split('@')[0],  # Facebook does not provide
                                             # username, so the email's user
                                             # is used instead
@@ -107,10 +107,8 @@ class GithubSignIn(OAuthSignIn):
             )
         ).json()
 
-        print(dir(me))
-        print(me)
         return (
-            'github$' + str(me['id']),
+            me['id'],
             me.get('login'),
             me.get('email'),
             me
@@ -134,7 +132,7 @@ class TwitterSignIn(OAuthSignIn):
         request_token = self.service.get_request_token(
             params={'oauth_callback': self.get_callback_url()}
         )
-        print('request token', request_token)
+
         session['request_token'] = request_token
         return redirect(self.service.get_authorize_url(request_token[0]))
 
@@ -148,10 +146,8 @@ class TwitterSignIn(OAuthSignIn):
             data={'oauth_verifier': request.args['oauth_verifier']}
         )
         me = oauth_session.get('account/verify_credentials.json').json()
-        print(me)
-        social_id = 'twitter$' + str(me.get('id'))
         username = me.get('screen_name')
-        return social_id, username, None, me  # Twitter does not provide email
+        return me.get('id'), username, None, me  # Twitter does not provide email
 
 
 class GoogleSignIn(OAuthSignIn):
@@ -189,6 +185,4 @@ class GoogleSignIn(OAuthSignIn):
             decoder=json.loads
         )
         me = oauth_session.get('').json()
-        print(me)
-        social_id = 'google$' + str(me['sub'])
-        return (social_id, me['name'], me['email'], me)  # use prepended username to create social_id
+        return (me['sub'], me['name'], me['email'], me)  # use prepended username to create social_id

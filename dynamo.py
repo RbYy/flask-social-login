@@ -26,14 +26,15 @@ class User(UserMixin):
         self.id = self.item['GUID']
         return super(User, self).get_id()
 
-    def getUser(self, GUID, provider='user'):
+    @classmethod
+    def get(cls, GUID):
         ts = datetime.now()
-        # res = self.__T.get_item(Key={'guid': 'smn::%s::%s' % (provider, id)})
-        res = self.__T.get_item(Key={'GUID': GUID})
+        res = cls.__T.get_item(Key={'GUID': GUID})
         if 'Item' in res:
+            self = User()
             self.item = res['Item']
             return self
-        self.executionTime = datetime.now() - ts
+        cls.executionTime = datetime.now() - ts
         return None
 
     def save(self, social_data, provider):
@@ -54,6 +55,7 @@ class User(UserMixin):
         self.__class__.__T.put_item(Item=storeArray)
         self.item = storeArray
         self.executionTime = datetime.now() - ts
+        return self
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
@@ -61,7 +63,7 @@ class User(UserMixin):
 
 @lm.user_loader
 def load_user(id):
-    return User().getUser(id)
+    return User.get(id)
 
 
 @app.route('/')
@@ -100,9 +102,10 @@ def register():
 def login():
     password = request.form['password']
     remember_me = False
+    user = User.get(generate_GUID())
     if 'remember_me' in request.form:
         remember_me = True
-    user = User().getUser(generate_GUID())
+
     if not user:
         flash('Username is invalid')
         return redirect(url_for('index'))
@@ -110,7 +113,7 @@ def login():
     if not check_password_hash(user.item['password'], password):
         flash('Password is invalid')
         return redirect(url_for('index'))
-    print('email: ', user.item['email'])
+
     session['me'] = {'username:': user.item['GUID']}
     login_user(user, remember=remember_me)
     flash('Logged in successfully')
@@ -121,6 +124,7 @@ def login():
 def oauth_authorize(provider):
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
+
     oauth = OAuthSignIn.get_provider(provider)
     return oauth.authorize()
 
@@ -129,6 +133,7 @@ def oauth_authorize(provider):
 def oauth_callback(provider):
     if not current_user.is_anonymous:  # if logged in
         return redirect(url_for('index'))
+
     oauth = OAuthSignIn.get_provider(provider)
     social_id, username, email, social_data = oauth.callback()
     if social_id is None:
@@ -136,14 +141,11 @@ def oauth_callback(provider):
         return redirect(url_for('index'))
 
     social_id = 'smn::' + provider + '::' + str(social_id)
-    print('ffffff', social_id, provider)
-    # user_data, GUID = db.getUser(social_id, provider)
-    # print('blabla', GUID)
-    # user = engine.query(RobertBrumatTest).filter(GUID=social_id).first(desc=True)User
-    user = User().getUser(social_id)
+    user = User.get(social_id)
     if not user:  # create new user with provider's data and a placeholder for password
         print('creating user ...')
-        user = User().saveLogin(social_data, provider)
+        user = User().save(social_data, provider)
+
     login_user(user, True)
     session['me'] = social_data
     return redirect(url_for('index'))

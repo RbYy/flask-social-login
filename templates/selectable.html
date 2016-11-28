@@ -1,0 +1,399 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Cool jQuery Radial Menu Demo</title>
+<link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<style>
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: linear-gradient(45deg, #e10522 0%, rgba(225, 5, 34, 0) 70%),
+			  linear-gradient(135deg, #3105d1 10%, rgba(49, 5, 209, 0) 80%),
+		 	  linear-gradient(225deg, #0adbd8 10%, rgba(10, 219, 216, 0) 80%),
+			  linear-gradient(315deg, #09f505 100%, rgba(9, 245, 5, 0) 70%);
+}
+
+.absolute-center,
+.menu,
+.menu .btn .fa,
+.nested,
+.menu .btn.trigger .line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.menu {
+  width: 5em;
+  height: 5em;
+}
+
+
+
+.menu .btn,
+.nested {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  opacity: 0;
+  z-index: -10;
+  cursor: pointer;
+  transition: opacity 1s, z-index 0.3s, transform 1s;
+  transform: translateX(0);
+}
+
+/*width:0 namesto opacity:0*/
+/* veja se skrije, ko ni aktivna. V vsakem primeru je vidna največ ena podskupina, drugače lahko nastane nepregledna gneča */
+.btn-icon,{
+    width:0%;
+}
+/*----*/
+
+.menu .btn .fa {
+  font-size: 3em;
+  transition: color 0.3s;
+}
+
+.menu .btn:hover { color: rgba(255, 255, 255, 0.7); }
+
+.menu .btn.trigger {
+  opacity: 1;
+  z-index: 100;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.menu .btn.trigger:hover {
+  transform: scale(1.2);
+}
+
+.menu .btn.trigger:hover .line { background-color: rgba(255, 255, 255, 0.7); }
+
+.menu .btn.trigger:hover .line:before,
+.menu .btn.trigger:hover .line:after { background-color: rgba(255, 255, 255, 0.7); }
+
+.menu .btn.trigger .line {
+  width: 60%;
+  height: 6px;
+  background: #000;
+  border-radius: 6px;
+  transition: background-color 0.3s, height 0.3s, top 0.3s;
+}
+
+.menu .btn.trigger .line:before,
+.menu .btn.trigger .line:after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: #000;
+  border-radius: 6px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.menu .btn.trigger .line:before {
+  top: -12px;
+  transform-origin: 15% 100%;
+}
+
+.menu .btn.trigger .line:after {
+  top: 12px;
+  transform-origin: 25% 30%;
+}
+
+.menu .rotater,
+.nested {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+}
+
+
+
+.menu.active .btn.btn-icon{
+  opacity: 1;
+  z-index: 50;
+}
+
+.menu.active .btn.btn-icon{
+  width:100%;
+}
+
+.btn-icon.active .nested {
+  opacity: 1;
+  z-index: 50;
+  width: 100%;
+}
+
+.menu.active .trigger .line {
+  height: 0px;
+  top: 45%;
+}
+
+.menu.active .trigger .line:before {
+  transform: rotate(45deg);
+  width: 110%;
+}
+
+.menu.active .trigger .line:after {
+  transform: rotate(-45deg);
+  width: 110%;
+}
+
+/* horrible things are happening here
+for some reason nth-child(1) is always busy and elements starting from 2 */
+
+
+
+
+.rotater:nth-child(2) {
+  transform: rotate(22.5deg);
+}
+
+.menu.active .rotater:nth-child(2) .btn-icon {
+  transform: translateX(-10em) rotate(-22.5deg);
+}
+
+.rotater:nth-child(3) {
+  transform: rotate(67.5deg);
+}
+
+.menu.active .rotater:nth-child(3) .btn-icon {
+  transform: translateX(-10em) rotate(-67.5deg);
+}
+
+.rotater:nth-child(4) {
+  transform: rotate(112.5deg);
+}
+
+.menu.active .rotater:nth-child(4) .btn-icon {
+  transform: translateX(-10em) rotate(-112.5deg);
+}
+
+/* premikanje podelementov za google (4th child)*/
+    .menu.active .rotater:nth-child(4) .btn.btn-icon .rotater:nth-child(3) {
+      transform: rotate(60.5deg);
+    }
+    .menu.active .rotater:nth-child(4) .btn-icon.active .rotater:nth-child(3) .btn-icon.nested{
+      transform: translateX(-6em) rotate(-60.5deg);
+    }
+    .menu.active .rotater:nth-child(4) .btn.btn-icon .rotater:nth-child(2) {
+      transform: rotate(115.5deg);
+    }
+    .menu.active .rotater:nth-child(4) .btn-icon.active .rotater:nth-child(2) .btn-icon.nested{
+      transform: translateX(-6em) rotate(-115.5deg);
+    }
+    .menu.active .rotater:nth-child(4) .btn-icon .rotater:nth-child(4) {
+      transform: rotate(170.5deg);
+    }
+    .menu.active .rotater:nth-child(4) .btn-icon.active .rotater:nth-child(4) .btn-icon.nested{
+      transform: translateX(-6em) rotate(-170.5deg);
+    }  
+/* ----------- */
+
+
+.rotater:nth-child(5) {
+  transform: rotate(157.5deg);
+}
+
+.menu.active .rotater:nth-child(5) .btn-icon {
+  transform: translateX(-10em) rotate(-157.5deg);
+}
+
+.rotater:nth-child(6) {
+  transform: rotate(202.5deg);
+}
+
+.menu.active .rotater:nth-child(6) .btn-icon {
+  transform: translateX(-10em) rotate(-202.5deg);
+}
+
+.rotater:nth-child(7) {
+  transform: rotate(247.5deg);
+}
+
+.menu.active .rotater:nth-child(7) .btn-icon {
+  transform: translateX(-10em) rotate(-247.5deg);
+}
+
+/* premikanje podelementov za instagram (7th child)*/
+
+    .menu.active .rotater:nth-child(7) .btn-icon .rotater:nth-child(3) {
+      transform: rotate(210.5deg);
+    }
+
+    .menu.active .rotater:nth-child(7) .btn-icon.active .rotater:nth-child(3) .btn-icon.nested{
+      transform: translateX(-6em) rotate(-210.5deg);
+    }
+
+    .menu.active .rotater:nth-child(7) .btn-icon .rotater:nth-child(2) {
+      transform: rotate(280.5deg);
+    }
+
+    .menu.active .rotater:nth-child(7) .btn-icon.active .rotater:nth-child(2) .btn-icon.nested{
+      transform: translateX(-6em) rotate(-280.5deg);
+    }
+/* ------------------------ */
+
+.rotater:nth-child(8) {
+  transform: rotate(292.5deg);
+}
+
+.menu.active .rotater:nth-child(8) .btn-icon {
+  transform: translateX(-10em) rotate(-292.5deg);
+}
+
+.rotater:nth-child(9) {
+  transform: rotate(337.5deg);
+}
+
+.menu.active .rotater:nth-child(9) .btn-icon {
+  transform: translateX(-10em) rotate(-337.5deg);
+}
+
+
+/*izbor*/
+.checked {
+    color: yellow;
+}
+.checked:hover {
+    color: orange;
+}
+
+
+/* še malo stajlinga za poročilo */
+.report {
+    color: white;
+    padding: 30px;
+    font-size: 1.5em;
+    font-family: sans-serif;
+}
+.results {
+    padding: 20px;
+}
+
+</style>
+</head>
+
+<body>
+<h1 style="color:#fff" align="center">Cool jQuery Radial Menu Demo</h1>
+<div class="jquery-script-ads" align="center"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+</div>
+<div class="menu">
+  <div class="btn trigger"> <span class="line"></span> </div>
+  <div class="rotater">
+    <div class="btn btn-icon"> <i class="fa fa-html5"></i> </div>
+  </div>
+  <div class="rotater">
+    <!-- ne glede na katerem nivoju je gumb, ga lahko označiš, če ima class "checkable" -->
+    <div class="btn btn-icon checkable"> <i class="fa fa-facebook"></i> </div>
+  </div>
+  <div class="rotater">
+    <div class="btn btn-icon"><i class="fa fa-google-plus"></i>
+        <!-- nested v google -->
+        <div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-css3"></i></div></div>
+        <div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-github"></i></div></div>
+        <div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-html5"></i></div></div>
+        <!--  - -->
+	</div>
+  </div>
+  <div class="rotater">
+    <div class="btn btn-icon checkable"> <i class="fa fa-twitter"></i> </div>
+  </div>
+  <div class="rotater">
+    <div class="btn btn-icon"> <i class="fa fa-css3"></i> </div>
+  </div>
+  <div class="rotater">
+    <div class="btn btn-icon"> <i class="fa fa-instagram"></i> 
+        <!--nested v instagram-->
+		<div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-twitter"></i></div></div>
+		<div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-github"></i></div></div>
+        <!-- - -->
+	</div>
+  </div>
+  <div class="rotater">
+    <div class="btn btn-icon"> <i class="fa fa-github"></i> </div>
+  </div>
+  <div class="rotater">
+    <div class="btn btn-icon"> <i class="fa fa-linkedin"></i> </div>
+  </div>
+</div>
+</div>
+<div class="report">
+    <p>Checked:</p>
+    <div class="results"></div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+$(document).ready(function() {
+    $(".trigger").click(function() {
+      $(".menu").toggleClass("active");
+    });
+  
+    $(".btn.btn-icon").click(function() {
+	 $(".btn.btn-icon").removeClass("active"); 
+     $(this).addClass('active')
+    });
+
+    $(".checkable").click(function() {
+     $(this).toggleClass("checked");
+
+     // primer kako lahko v javascriptu uporabiš rezultate
+     var result = ''
+     $(".checked").each(function(index){
+        result += "<p><i class='" + $('i', this).attr('class') + "'>" + "</i></p>";
+        });
+     $(".results").html(result);
+    });   
+});
+
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</body>
+</html>

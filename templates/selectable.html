@@ -42,11 +42,12 @@ body {
   height: 5em;
 }
 
-
+.menu .btn {
+  position: absolute;
+}
 
 .menu .btn,
 .nested {
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -56,7 +57,7 @@ body {
   opacity: 0;
   z-index: -10;
   cursor: pointer;
-  transition: opacity 1s, z-index 0.3s, transform 1s;
+  transition: width 1s, opacity 1s, z-index 0.3s, transform 1s;
   transform: translateX(0);
 }
 
@@ -122,7 +123,8 @@ body {
 }
 
 .menu .rotater,
-.nested {
+.nested,
+.nested .nested {
   position: absolute;
   top: 0;
   left: 0;
@@ -132,15 +134,11 @@ body {
 }
 
 
-
 .menu.active .btn.btn-icon{
   opacity: 1;
   z-index: 50;
 }
 
-.menu.active .btn.btn-icon{
-  width:100%;
-}
 
 .btn-icon.active .nested {
   opacity: 1;
@@ -148,6 +146,16 @@ body {
   width: 100%;
 }
 
+.btn-icon.active .nested .nested {
+    opacity: 0;
+    width: 0%;
+}
+.btn-icon.active .nested.active .nested{
+    position: absolute;
+    opacity: 1;
+    width: 100%;
+
+}
 .menu.active .trigger .line {
   height: 0px;
   top: 45%;
@@ -274,6 +282,43 @@ for some reason nth-child(1) is always busy and elements starting from 2 */
   transform: translateX(-10em) rotate(-337.5deg);
 }
 
+/*LinkedIn*/
+    /* -> github */
+    .menu.active .rotater:nth-child(9) .first-level .rotater:nth-child(3) {
+      transform: rotate(0deg);
+    }
+
+    .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(3) .nested {
+      transform: translateX(-6em) rotate(0deg);
+    }
+
+    /* -> twitter */
+    .menu.active .rotater:nth-child(9) .first-level .rotater:nth-child(2) {
+      transform: rotate(290.5deg);
+    }
+
+    .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(2) .nested {
+      transform: translateX(-6em) rotate(-290.5deg);
+    }
+
+        /* animacija na tretjem nivoju*/
+        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(2) .second-level .rotater:nth-child(2) {
+          transform: rotate(330deg);
+        }
+
+        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(2) .second-level.active .rotater:nth-child(2) .nested {
+          transform: translateX(-6em) rotate(-330deg);
+        }
+
+        /* -> twitter */
+        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(2) .second-level .rotater:nth-child(3) {
+          transform: rotate(270.5deg);
+        }
+
+        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(2) .second-level.active .rotater:nth-child(3) .nested {
+          transform: translateX(-6em) rotate(-270.5deg);
+        }
+
 
 /*izbor*/
 .checked {
@@ -312,40 +357,49 @@ google_ad_height = 90;
 <div class="menu">
   <div class="btn trigger"> <span class="line"></span> </div>
   <div class="rotater">
-    <div class="btn btn-icon"> <i class="fa fa-html5"></i> </div>
+    <div class="btn btn-icon first-level"> <i class="fa fa-html5"></i> </div>
   </div>
   <div class="rotater">
     <!-- ne glede na katerem nivoju je gumb, ga lahko označiš, če ima class "checkable" -->
-    <div class="btn btn-icon checkable"> <i class="fa fa-facebook"></i> </div>
+    <div class="btn btn-icon first-level checkable"> <i class="fa fa-facebook"></i> </div>
   </div>
   <div class="rotater">
-    <div class="btn btn-icon"><i class="fa fa-google-plus"></i>
+    <div class="btn btn-icon first-level"><i class="fa fa-google-plus"></i>
         <!-- nested v google -->
         <div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-css3"></i></div></div>
-        <div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-github"></i></div></div>
-        <div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-html5"></i></div></div>
+        <div class="rotater"><div class="btn-icon nested second-level checkable"><i class="fa fa-github"></i></div></div>
+        <div class="rotater"><div class="btn-icon nested second-level checkable"><i class="fa fa-html5"></i></div></div>
         <!--  - -->
 	</div>
   </div>
   <div class="rotater">
-    <div class="btn btn-icon checkable"> <i class="fa fa-twitter"></i> </div>
+    <div class="btn btn-icon first-level checkable"> <i class="fa fa-twitter"></i> </div>
   </div>
   <div class="rotater">
-    <div class="btn btn-icon"> <i class="fa fa-css3"></i> </div>
+    <div class="btn btn-icon first-level"> <i class="fa fa-css3"></i> </div>
   </div>
   <div class="rotater">
-    <div class="btn btn-icon"> <i class="fa fa-instagram"></i> 
+    <div class="btn btn-icon first-level"> <i class="fa fa-instagram"></i> 
         <!--nested v instagram-->
-		<div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-twitter"></i></div></div>
-		<div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-github"></i></div></div>
+		<div class="rotater"><div class="btn-icon nested second-level checkable"><i class="fa fa-twitter"></i></div></div>
+		<div class="rotater"><div class="btn-icon nested second-level checkable"><i class="fa fa-github"></i></div></div>
         <!-- - -->
 	</div>
   </div>
   <div class="rotater">
-    <div class="btn btn-icon"> <i class="fa fa-github"></i> </div>
+    <div class="btn btn-icon first-level"> <i class="fa fa-github"></i> </div>
   </div>
-  <div class="rotater">
-    <div class="btn btn-icon"> <i class="fa fa-linkedin"></i> </div>
+  <div class="rotater"> <!-- prvi nivo -->
+    <div class="btn btn-icon first-level"> <i class="fa fa-linkedin"></i> <!-- prvi nivo -->
+        <div class="rotater"> <!-- drugi nivo -->
+          <div class="btn-icon nested second-level"><i class="fa fa-twitter"></i> <!-- drugi nivo -->
+            <div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-css3"></i></div></div> <!-- tretji nivo -->
+            <div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-html5"></i></div></div>
+          </div> <!-- drugi -->
+        </div> <!-- drugi -->
+        <div class="rotater"><div class="btn-icon nested second-level checkable"><i class="fa fa-github"></i></div></div> <!-- drugi nivo -->
+    </div> <!-- prvi -->
+    
   </div>
 </div>
 </div>
@@ -360,12 +414,31 @@ google_ad_height = 90;
 $(document).ready(function() {
     $(".trigger").click(function() {
       $(".menu").toggleClass("active");
+      $(".first-level").removeClass("active"); 
+      $(".second-level").removeClass("active");
     });
   
-    $(".btn.btn-icon").click(function() {
-	 $(".btn.btn-icon").removeClass("active"); 
-     $(this).addClass('active')
+    $(".first-level").click(function() {
+        if($(this).attr('class').indexOf('active') >= 0){
+            $(this).removeClass('active');
+        }
+        else {
+    	 $(".first-level").removeClass("active"); 
+         $(".second-level").removeClass("active"); 
+         $(this).addClass('active')
+        }
     });
+
+    $(".second-level").click(function(e) {
+        e.stopPropagation()
+        if($(this).attr('class').indexOf('active') >= 0){
+            $(this).removeClass('active');
+        }
+        else {
+            $(".second-level").removeClass("active");
+            $(this).addClass('active')
+        }
+    });    
 
     $(".checkable").click(function() {
      $(this).toggleClass("checked");
@@ -373,7 +446,7 @@ $(document).ready(function() {
      // primer kako lahko v javascriptu uporabiš rezultate
      var result = ''
      $(".checked").each(function(index){
-        result += "<p><i class='" + $('i', this).attr('class') + "'>" + "</i></p>";
+        result += "<p><i class='" + $('i', this).attr('class') + "'></i></p>";
         });
      $(".results").html(result);
     });   

@@ -68,7 +68,10 @@ def load_user(id):
 
 @app.route('/')
 def index():
-    me = session['me'] or {}
+    try:
+        me = session['me']
+    except:
+        me = {}
     return render_template('index.html', me=me)
 
 

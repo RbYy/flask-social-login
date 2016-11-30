@@ -73,7 +73,11 @@ body {
   transition: color 0.3s;
 }
 
-.menu .btn:hover { color: rgba(255, 255, 255, 0.7); }
+.menu > .rotater >.btn:hover { color: rgba(255, 255, 255, 0.7); }
+
+.menu > .rotater >.btn:hover  .btn-icon{ color: black; }
+
+.menu > .rotater >.btn  .btn-icon:hover{ color: white; }
 
 .menu .btn.trigger {
   opacity: 1;
@@ -357,11 +361,11 @@ google_ad_height = 90;
 <div class="menu">
   <div class="btn trigger"> <span class="line"></span> </div>
   <div class="rotater">
-    <div class="btn btn-icon first-level"> <i class="fa fa-html5"></i> </div>
+    <div class="btn btn-icon first-level"> <i class="fa fa-html5"></i></div>
   </div>
   <div class="rotater">
     <!-- ne glede na katerem nivoju je gumb, ga lahko označiš, če ima class "checkable" -->
-    <div class="btn btn-icon first-level checkable"> <i class="fa fa-facebook"></i> </div>
+    <div class="btn btn-icon first-level checkable"> <i class="fa fa-facebook"></i></div>
   </div>
   <div class="rotater">
     <div class="btn btn-icon first-level"><i class="fa fa-google-plus"></i>
@@ -373,13 +377,13 @@ google_ad_height = 90;
 	</div>
   </div>
   <div class="rotater">
-    <div class="btn btn-icon first-level checkable"> <i class="fa fa-twitter"></i> </div>
+    <div class="btn btn-icon first-level checkable"> <i class="fa fa-twitter"></i></div>
   </div>
   <div class="rotater">
     <div class="btn btn-icon first-level"> <i class="fa fa-css3"></i> </div>
   </div>
   <div class="rotater">
-    <div class="btn btn-icon first-level"> <i class="fa fa-instagram"></i> 
+    <div class="btn btn-icon first-level"> <i class="fa fa-instagram"></i>
         <!--nested v instagram-->
 		<div class="rotater"><div class="btn-icon nested second-level checkable"><i class="fa fa-twitter"></i></div></div>
 		<div class="rotater"><div class="btn-icon nested second-level checkable"><i class="fa fa-github"></i></div></div>
@@ -387,17 +391,19 @@ google_ad_height = 90;
 	</div>
   </div>
   <div class="rotater">
-    <div class="btn btn-icon first-level"> <i class="fa fa-github"></i> </div>
+    <div class="btn btn-icon first-level"> <div><i class="fa fa-github"></i></div></div>
   </div>
   <div class="rotater"> <!-- prvi nivo -->
+
     <div class="btn btn-icon first-level"> <i class="fa fa-linkedin"></i> <!-- prvi nivo -->
+        <div class="rotater"><div class="btn-icon nested second-level checkable"><i class="fa fa-github"></i></div></div> <!-- drugi nivo -->
         <div class="rotater"> <!-- drugi nivo -->
           <div class="btn-icon nested second-level"><i class="fa fa-twitter"></i> <!-- drugi nivo -->
             <div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-css3"></i></div></div> <!-- tretji nivo -->
             <div class="rotater"><div class="btn-icon nested checkable"><i class="fa fa-html5"></i></div></div>
           </div> <!-- drugi -->
         </div> <!-- drugi -->
-        <div class="rotater"><div class="btn-icon nested second-level checkable"><i class="fa fa-github"></i></div></div> <!-- drugi nivo -->
+        
     </div> <!-- prvi -->
     
   </div>

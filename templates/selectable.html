@@ -75,9 +75,13 @@ body {
 
 .menu > .rotater >.btn:hover { color: rgba(255, 255, 255, 0.7); }
 
-.menu > .rotater >.btn:hover  .btn-icon{ color: black; }
+.menu > .rotater >.btn:hover .btn-icon{ color: black; }
 
-.menu > .rotater >.btn  .btn-icon:hover{ color: white; }
+.menu > .rotater >.btn:hover .btn-icon.checked{ color: yellow; }
+
+.menu > .rotater >.btn .btn-icon:hover{ color: white; }
+
+.menu > .rotater >.btn .btn-icon.checked:hover{ color: orange; }
 
 .menu .btn.trigger {
   opacity: 1;
@@ -306,21 +310,20 @@ for some reason nth-child(1) is always busy and elements starting from 2 */
     }
 
         /* animacija na tretjem nivoju*/
-        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(2) .second-level .rotater:nth-child(2) {
-          transform: rotate(330deg);
+        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(3) .second-level .rotater:nth-child(2) {
+          transform: rotate(400deg);
         }
 
-        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(2) .second-level.active .rotater:nth-child(2) .nested {
-          transform: translateX(6em) rotate(-330deg);
+        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(3) .second-level.active .rotater:nth-child(2) .nested {
+          transform: translateX(6em) rotate(-400deg);
         }
 
-        /* -> twitter */
-        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(2) .second-level .rotater:nth-child(3) {
-          transform: rotate(270.5deg);
+        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(3) .second-level .rotater:nth-child(3) {
+          transform: rotate(340.5deg);
         }
 
-        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(2) .second-level.active .rotater:nth-child(3) .nested {
-          transform: translateX(6em) rotate(-270.5deg);
+        .menu.active .rotater:nth-child(9) .first-level.active .rotater:nth-child(3) .second-level.active .rotater:nth-child(3)  .nested{
+          transform: translateX(6em) rotate(-340.5deg);
         }
 
 
@@ -449,7 +452,6 @@ $(document).ready(function() {
     $(".checkable").click(function(e) {
      e.stopPropagation()
      $(this).toggleClass("checked");
-
      // primer kako lahko v javascriptu uporabiš rezultate
      var result = ''
      $(".checked").each(function(index){

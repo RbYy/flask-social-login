@@ -6,7 +6,7 @@ $(document).ready(function() {
         $(".level-1").each(function(index){
             angle += angleBetween;
             $(this).css("transform", "rotate(-" + angle + "deg)")
-            $(".btn-icon", this).css("opacity", "0")
+            $(".btn", this).css("opacity", "0")
         });
 
     function getLevelDepth(){

@@ -19,7 +19,7 @@ $(document).ready(function() {
     }
 
     $(".trigger").click(function() {
-        $(".btn").removeClass("active");
+        $(".rotater").removeClass("active");
         $(".menu").toggleClass("active");
         var angleBetween = 360 / firstLevelLength;
         var angle = angleBetween / 2 - angleBetween
@@ -53,20 +53,21 @@ $(document).ready(function() {
             }           
         }else {
             $(".level-" + level).removeClass("active");
-            $(".level-" + levelUp).removeClass("active");
             for (var i = levelUp; i <= getLevelDepth(); i++) {
+                $(".level-" + i).removeClass("active");
                 $(".level-" + i + " .btn").each(function(index){
                     $(this).css({transform: "", opacity: "0"})
                 });
             }
             $( this).addClass('active')
             originalAngle = $(this).attr('style').split(/[()d]+/).filter(function(e) { return e; })[1];
-            angle = originalAngle - children.length * angleBetween / 2 + angleBetween / 2     
+            firstBtnAngle = originalAngle - children.length * angleBetween / 2 + angleBetween / 2
+            angle = firstBtnAngle
             children.each(function(index){
                 $(this).css("transform", "rotate(" + angle + "deg)")
                 angle += angleBetween 
             })
-            angle = originalAngle - children.length * angleBetween / 2 + angleBetween / 2 
+            angle = firstBtnAngle
             childrenBtns.each(function(index){     
                 $(this).css({
                     transform: "translateX(" + Number(10+level*6) + "em) rotate(" + angle * -1 + "deg)",
